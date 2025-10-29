@@ -31,29 +31,29 @@
         int day = 1;
         do {
             P(day __);
-
+do {
             // For loop for 24 hours day
-            for () {
-                P();
-
+            for (int hour = 0; hour < 24; hour++) 
+{
+                P("Hour %d\n", hour) ;
+}
                 // use this to count the medicine
-                for () {
-                    if () // use this to get the interval time {
-                        if () // if may na take ng medicine
-                          {
-                          P(Take _____);
-                            e.g (TERMINAL: Take Biogesic)
-                          }
-                    }
-                        
-                }
-
-            if () //use this if walang natake
-                P("No medicine taken");
-
+                for ( int i = 0; i < num_medicines; i++) 
+        { 
+            {
+                    if ("Take %s\n", medicine_name[i]);
+                    // if may na take ng medicine
+            }
+            }                
+{
+                P("No medicine taken\n");
+                //use this if walang natake
+} 
             }
         day++;
-        } while (days <= day) 
-            break;
+        if (day >days) break; // Break when day exceeds the input days
+        } while (1) ;
+            return 0;
 }
 ***************************************************************************************************************/
+
