@@ -59,3 +59,63 @@
             break;
 }
 ***************************************************************************************************************/
+kalboo
+/*********************************************************************************************************
+	Switch case 1: // Custom
+        Char medicine_name[max number of medicine][number of letter of med];
+        int interval[number of interval];
+
+        P("TITLE");
+
+        do {
+          P(medicine name:);
+          S();
+
+          P(interval time:);
+          S();
+
+          if (count number of med) // use this to count or check the number of med
+              {
+              P("You have reached the max num");
+              break;
+          }
+          P(Need to input another medicine?(Y/n)); // ask userinput
+          S(variable_name);
+
+        } while (variable_name == 'y' || variable_name == 'Y'); 
+
+        P(TIME TAKE (0-23));
+        S();
+
+        P(enter number of days );
+        S();
+
+        int day = 1;
+        do {
+            P(day __);
+do {
+            // For loop for 24 hours day
+            for (int hour = 0; hour < 24; hour++) 
+{
+                P("Hour %d\n", hour) ;
+}
+                // use this to count the medicine
+                for ( int i = 0; i < num_medicines; i++) 
+        { 
+            {
+                    if ("Take %s\n", medicine_name[i]);
+                    // if may na take ng medicine
+            }
+            }                
+{
+                P("No medicine taken\n");
+                //use this if walang natake
+} 
+            }
+        day++;
+        if (days <= day) 
+break; // Break when day exceeds the input days
+        } 
+            return 0;
+}
+***************************************************************************************************************/
