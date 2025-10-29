@@ -1,0 +1,109 @@
+switch case 2
+  // PATIENT INFO
+  P(NAME) 
+  P(AGE)
+  P(SEX)
+
+  // MAINTENANCE
+  P();
+  .....
+
+  NOTE: TERMINAL BELOW
+  // Display
+  MODE
+  1. Specific number of days
+  2. Lifetime
+
+  Enter choice: 
+  Enter number of days:
+
+  // NOTE: CODE ABOVE 
+  P("MODE")
+  P(1. Specific number of days);
+  P(2. Lifetime);
+  
+  P("Enter choice: ") // either 1 or 2
+  S();
+
+  if(1) {
+    P(Enter number of days:);
+    S();
+  } else {
+      day_s = 1 // for lifetime, will just simulate each day
+  }
+
+  int day = 1;
+  do {
+        if(1) {
+          P(day ___ );
+        } else {
+            P(Lifetime reminder)
+        }
+
+  int Glimepiride = 0;
+      ,Multivitamins = 0;
+       , Metformin = 0;
+        ,Losartan = 0;
+        ,Amlodipine = 0;
+       , Metformin = 0;
+        ,Atorvastatin = 0;
+  
+  // use for loop to print hours or the time. 12 hrs time
+  for() {
+      int display_hour = (hour == 0 || hour == 12) ? 12 : hour % 12; // chatgpt explain
+            /* ternary operator 
+                  (hour == 0 || hour == 12) ? 12 : hour % 12
+                  (condition) ? (value_if_true) : (value_if_false)
+                  It checks the condition,
+                  > if it’s true, it returns value_if_true
+                  > if it’s false, it returns value_if_false.
+      
+                  Explanation
+                  (hour == 0 || hour == 12) → checks if the current hour is 0 (midnight) or 12 (noon).
+                  If true, display_hour becomes 12.
+                  If false, display_hour becomes hour % 12 (remainder when divided by 12).
+                  
+            */
+      char period[3];
+      strcpy(period, (hour < 12) ? "AM" : "PM"); // strcpy(des, src) ?(ternary)
+      P(hour, period);
+
+      /*
+        Glimepiride- 6:00 AM
+        Multivitamins- 6:00 AM
+        Metformin- 12:00 PM
+        Losartan- 2:00 PM
+        Amlodipine- 2:00 PM
+        Metformin- 7:00 PM
+        Atorvastatin- 9:00 PM
+      */
+
+     if(hour == 6) {
+          P("Take Glimepiride & Multivitamins");
+           Glimepiride++;
+           Multivitamins++;
+     } else if (hour == 12) ..... {
+          Metformin++; // metformali + 1 = 1
+                      //  0 + 1 = 1
+                      // 1+1 = 2
+     } else {
+        P(Invalid)
+     }
+              
+  }
+      
+     day++;
+    
+  } while (days <= day) );
+
+  if(2) {
+      P() //lifetime reminder
+  }
+  break;
+
+  
+
+  
+  
+  
+  
