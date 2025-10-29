@@ -1,4 +1,6 @@
 /*********************************************************************************************************
+
+
 	Switch case 1: // Custom
         Char medicine_name[max number of medicine][number of letter of med];
         int interval[number of interval];
@@ -31,28 +33,29 @@
         int day = 1;
         do {
             P(day __);
-do {
+
             // For loop for 24 hours day
-            for (int hour = 0; hour < 24; hour++) 
-{
-                P("Hour %d\n", hour) ;
-}
+            for () {
+                P();
+
                 // use this to count the medicine
-                for ( int i = 0; i < num_medicines; i++) 
-        { 
-            {
-                    if ("Take %s\n", medicine_name[i]);
-                    // if may na take ng medicine
-            }
-            }                
-{
-                P("No medicine taken\n");
-                //use this if walang natake
-} 
+                for () {
+                    if () // use this to get the interval time {
+                        if () // if may na take ng medicine
+                          {
+                          P(Take _____);
+                            e.g (TERMINAL: Take Biogesic)
+                          }
+                    }
+                        
+                }
+
+            if () //use this if walang natake
+                P("No medicine taken");
+
             }
         day++;
-        if (day >days) break; // Break when day exceeds the input days
-        } while (1) ;
-            return 0;
+        } while (days <= day) 
+            break;
 }
 ***************************************************************************************************************/
