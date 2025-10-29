@@ -1,0 +1,59 @@
+/*********************************************************************************************************
+	Switch case 1: // Custom
+        Char medicine_name[max number of medicine][number of letter of med];
+        int interval[number of interval];
+
+        P("TITLE");
+
+        do {
+          P(medicine name:);
+          S();
+
+          P(interval time:);
+          S();
+
+          if (count number of med) // use this to count or check the number of med
+              {
+              P("You have reached the max num");
+              break;
+          }
+          P(Need to input another medicine?(Y/n)); // ask userinput
+          S(variable_name);
+
+        } while (variable_name == 'y' || variable_name == 'Y'); 
+
+        P(TIME TAKE (0-23));
+        S();
+
+        P(enter number of days );
+        S();
+
+        int day = 1;
+        do {
+            P(day __);
+
+            // For loop for 24 hours day
+            for () {
+                P();
+
+                // use this to count the medicine
+                for () {
+                    if () // use this to get the interval time {
+                        if () // if may na take ng medicine
+                          {
+                          P(Take _____);
+                            e.g (TERMINAL: Take Biogesic)
+                          }
+                    }
+                        
+                }
+
+            if () //use this if walang natake
+                P("No medicine taken");
+
+            }
+        day++;
+        } while (days <= day) 
+            break;
+}
+***************************************************************************************************************/
