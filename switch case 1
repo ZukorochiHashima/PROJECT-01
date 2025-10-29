@@ -2,7 +2,7 @@
 	Switch case 1: // Custom
         Char medicine_name[max number of medicine][number of letter of med];
         int interval[number of interval];
-
+OKAY NA
         P("TITLE");
 
         do {
