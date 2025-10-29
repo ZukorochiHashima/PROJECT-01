@@ -1,4 +1,4 @@
-
+/************************************************************
 P("") // TITLE NUNG PROJECT. Note: pagandahin
 //Print the list of medicine ni lola
 P(); // Medicine name (e.g LOSARTAN)
@@ -14,3 +14,4 @@ switch case 3 {
 default: // invalid yung input. Try again
     P("");
 }
+************************************************************/
