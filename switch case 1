@@ -61,28 +61,46 @@
 ***************************************************************************************************************/
 kalboo
 /*********************************************************************************************************
-	Switch case 1: // Custom
-        Char medicine_name[max number of medicine][number of letter of med];
-        int interval[number of interval];
+Switch Case 1: // Custom
 
-        P("TITLE");
+#include <stdio.h>
+#include <string.h>
+#define P printf
+#define S scanf
 
-        do {
-          P(medicine name:);
-          S();
+int main() {
 
-          P(interval time:);
-          S();
+    char medicine_name[10][50]; 
+    int interval[10];             
+    int num_medicines = 0;
+    char variable_name;
+    int time_take;
+    int days;
+    int day = 1;
 
-          if (count number of med) // use this to count or check the number of med
-              {
-              P("You have reached the max num");
-              break;
-          }
-          P(Need to input another medicine?(Y/n)); // ask userinput
-          S(variable_name);
+    P("MEDICINE REMINDER\n");
 
-        } while (variable_name == 'y' || variable_name == 'Y'); 
+    do {
+        if (num_medicines >= 10) {  
+            P("You have reached the max number of medicines.\n");
+            break;
+        }
+
+        P("Enter Medicine name: ");
+        S("%s",&medicine_name[num_medicines]);
+
+        P("Enter the Interval time: ");
+        S("%d",&interval[num_medicines]);
+
+        num_medicines++;
+
+        P("Need to input another medicine? (Y/n): ");
+        S(" %c",&variable_name);
+
+    } while (variable_name=='y'|| variable_name=='Y');
+
+
+
 
         P(TIME TAKE (0-23));
         S();
