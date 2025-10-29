@@ -1,0 +1,16 @@
+
+P("") // TITLE NUNG PROJECT. Note: pagandahin
+//Print the list of medicine ni lola
+P(); // Medicine name (e.g LOSARTAN)
+P(); // Interval (e.g every at 2:00pm)
+...
+
+==========================================
+
+switch case 3 {
+    P("Exit"); // exit the program. Note: dagdagan mo ng sasabihin.
+    break;
+
+default: // invalid yung input. Try again
+    P("");
+}
