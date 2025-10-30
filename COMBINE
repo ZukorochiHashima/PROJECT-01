@@ -1,0 +1,28 @@
+#include <stdio.h>
+#include <string.h>
+#include <conio.h>
+#define P printf
+#define S scanf
+
+int main() {
+  int runnning == 1; // will put this in while loop so the code will keep on
+  int Your_choice;
+
+  while(running == 1) {
+    P("Choose One");
+    P("1. Custom");
+    P("2. Lola Victorina's Maintenance");
+    P("3. Exit");
+    P("%d", &Your_choice);
+
+
+    switch (Your_choice) {
+        case 1: {}
+        case 2: {}
+        case 3: {}
+    }
+  }
+
+  
+  return 0;
+}
