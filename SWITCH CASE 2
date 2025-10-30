@@ -105,14 +105,36 @@ switch case 2
 
 
 switch case 2:
-  // Patient Info
-  P()
-  P("-------PATIENT INFORMATION-------");
-  P("Name: Victorina\n");
-  P("Age: 78\n");
-  P("Sex: Female\n");
-  P("---------------------------------");
+  #include <stdio.h>
 
+int main() {
+    char name[100];
+    int age;
+    char sex[10];
+
+    printf("PATIENT'S INFORMATION\n");
+
+    printf("Enter the Patient's Name: ");
+    fgets(name, sizeof(name), stdin);
+
+    printf("Enter the Patient's Age(In number): ");
+    scanf("%d", &age);
+
+    printf("Enter the Patient's Sex (Male/Female): ");
+    scanf("%s", sex);
+
+    printf("                \n");
+    printf("----------------\n");
+    printf("                \n");
+
+    printf("Patient's Information\n");
+    printf("Name: %s", name);
+    printf("Age: %d\n", age);
+    printf("Sex: %s\n", sex);
+    printf("                             \n");
+
+    return 0;
+}
   //Maintenance
   > ...
 
