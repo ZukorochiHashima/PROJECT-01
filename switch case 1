@@ -186,23 +186,18 @@ int main() {
 
     for (int day = 1; day <= num_days; day++) {
         P("\nDay %d:\n", day);
-
+}
         for (int hour = 0; hour < 24; hour++) {
             P("  Hour %d: ", hour);
 
             int medicineTaken = 0;
             for (int i = 0; i < num_medicines; i++) {
-                if (hour == time_take) { 
-                    P("Take %s\n", medicine_name[i]);
-                    medicineTaken = 10; 
+                if ((hour - time_take) % interval [i] == 0 && hour >= time_take) { 
+                    P("Take %s ", medicine_name[i]);
+                    medicineTaken = 1; 
                 }
-                if (hour == interval)
+            if (!medicineTaken) 
             {
-                P("interval %s\n", medicine_name[i]);
-                medicineTaken = 10;
-            }
-
-            if (!medicineTaken) {
                 P("No medicine taken\n");
             }
         }
