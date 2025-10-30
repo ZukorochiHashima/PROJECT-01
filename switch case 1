@@ -130,10 +130,80 @@ do {
                 //use this if walang natake
 } 
             }
-        day++;
-        if (days <= day) 
-break; // Break when day exceeds the input days
-        } 
-            return 0;
-}
+       day++;
+     }
+     while (days <= day) {
+         printf("inside the loop\n");
+         if (days > day) {
+             break;
+         }
+     }
+     printf("Finished\n");
+     return 0;
+ }
 ***************************************************************************************************************/
+#include <stdio.h>
+#include <string.h>
+
+#define P printf
+#define S scanf
+
+int main() {
+    char medicine_name[10][50];
+    int interval[10];
+    int num_medicines = 0;
+    char variable_name;
+    int time_take;
+    int num_days;
+
+    P("MEDICINE REMINDER\n");
+
+    // Input medicine names and intervals
+    do {
+        if (num_medicines >= 10) {
+            P("You have reached the max number of medicines.\n");
+            break;
+        }
+
+        P("Enter Medicine name: ");
+        S("%s", medicine_name[num_medicines]);
+
+        P("Enter the Interval time (hours): ");
+        S("%d", &interval[num_medicines]);
+
+        num_medicines++;
+
+        P("Need to input another medicine? (Y/n): ");
+        S(" %c", &variable_name);
+
+    } while (variable_name == 'y' || variable_name == 'Y');
+
+    P("Enter time to take medicine (0-23): ");
+    S("%d", &time_take);
+
+    P("Enter number of days: ");
+    S("%d", &num_days);
+
+    for (int day = 1; day <= num_days; day++) {
+        P("\nDay %d:\n", day);
+
+        for (int hour = 0; hour < 24; hour++) {
+            P("  Hour %d: ", hour);
+
+            int medicineTaken = 0;
+            for (int i = 0; i < num_medicines; i++) {
+                if (hour == time_take) { 
+                    P("Take %s\n", medicine_name[i]);
+                    medicineTaken = 1; 
+                }
+            }
+
+            if (!medicineTaken) {
+                P("No medicine taken\n");
+            }
+        }
+    }
+
+    P("Finished\n");
+    return 0;
+}
