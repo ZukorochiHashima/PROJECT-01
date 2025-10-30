@@ -49,7 +49,7 @@ switch case 2
        , Metformin = 0;
         ,Atorvastatin = 0;
   
-  // use for loop to print hours or the time. 12 hrs time
+  // use for loop to print hours or the time. 24 hrs time
   for() {
       int display_hour = (hour == 0 || hour == 12) ? 12 : hour % 12; // chatgpt explain
             /* ternary operator 
@@ -102,8 +102,60 @@ switch case 2
   }
   break;
 *******************************************************************/
+
+
+switch case 2:
+  // Patient Info
+  P()
+  P("-------PATIENT INFORMATION-------");
+  P("Name: Victorina\n");
+  P("Age: 78\n");
+  P("Sex: Female\n");
+  P("---------------------------------");
+
+  //Maintenance
+  > ...
+
+  // MODE
+  int choice, day;
+  P("Is this reminder for?\n ");
+  P("  1. Specific number of days\n");
+  P("  2. Lifetime\n");
+  
+  // Userinput
+  P("Enter your choice: ");
+  S("%d, &choice");
+
+  if(choice == 1) {
+    P("Enter number of days: ");
+    S("%d, &days");
+  } else {
+      days = 1; // Will stimulate one day only (For lifetime)
+  }
+
+  int day 1;
+  do {
+      P("============================================\n");
+      if(choice == 1) { 
+          P("DAY %d - Victorina\n", day);
+      } else {
+          P("LIFETIME DAILY REMINDER - Victorina");
+      }
+      P("============================================");
+
+      // Define these medicine as integer to store numbers taken for displaying summary of these medicine taken.
+      int Glimepiride = 0 ,Multivitamins = 0, Metformin = 0, Losartan = 0, Amlodipine = 0, Metformin = 0, Atorvastatin = 0;
+
+      // for loop to print 24 hours format
+      for(int hour = 0; hour < 24, hour++) {
+        int P_hour = (hour == 0 || hour 24) ? 12 : hour % 12; // we use ternary operator
+        char time_period[3] //String for "AM" and "PM"
+        P("%2:00 %s", P_hour, time_period); // Priting the time. (e.g 12:00 PM)
+      }
+  }
   
 
+  
   
   
   
