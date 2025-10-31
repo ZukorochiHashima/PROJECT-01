@@ -1,28 +1,151 @@
 #include <stdio.h>
 #include <string.h>
-#include <conio.h>
 #define P printf
 #define S scanf
 
 int main() {
-  int runnning == 1; // will put this in while loop so the code will keep on
-  int Your_choice;
+	int running = 1; // will put this in while loop so the code will keep on
+	int Your_choice;
+	int glimepiride = 0, multivitamins = 0, metformin = 0, 
+					    losartan = 0, amlodipine = 0, atorvastatin = 0;
 
-  while(running == 1) {
-    P("Choose One");
-    P("1. Custom");
-    P("2. Lola Victorina's Maintenance");
-    P("3. Exit");
-    P("%d", &Your_choice);
+	while(running == 1) {
+		P("Choose One\n");
+		P("1. Custom\n");
+		P("2. Lola Victorina's Maintenance\n");
+		P("3. Exit\n");
+		P("Enter your choice: ");
+		S("%d", &Your_choice);
 
 
-    switch (Your_choice) {
-        case 1: {}
-        case 2: {}
-        case 3: {}
-    }
-  }
+		switch (Your_choice) {
+		case 1:
+			P("On going");
+			break;
 
-  
-  return 0;
+		case 2:
+			// ==========LOLA VICTORINA'S MAINTENANCE=========
+			P("\n--- PATIENT INFORMATION ---\n");
+			P("Name: Victorina\n");
+			P("Age: 78 yrs old\n");
+			P("Sex: Female\n");
+			P("------------------------------\n");
+			P("Diagnoses and Prescriptions:\n");
+			P("1. Hypertension:\n");
+			P("   - Losartan (50 mg) -> 2:00 PM\n");
+			P("   - Amlodipine (5 mg) -> 2:00 PM\n");
+			P("2. Type 2 Diabetes Mellitus:\n");
+			P("   - Metformin (500 mg) -> 12:00 PM / 7:00 PM\n");
+			P("   - Glimepiride (2 mg)-> 6:00 AM\n");
+			P("3. Hyperlipidemia:\n");
+			P("   - Atorvastatin (20 mg) -> 9:00 PM\n");
+			P("4. Multivitamins:\n");
+			P("   - Multivitamins -> 6:00 AM\n");
+			P("------------------------------\n");
+
+			// MODE
+			int choice;
+			P("\nIs this reminder for?\n");
+			P("1. Specific number of days\n");
+			P("2. Lifetime\n");
+
+			// Userinput
+			P("Enter your choice: ");
+			S("%d", &choice);
+
+			int days;
+			if(choice == 1) {
+				P("Enter number of days: ");
+				S("%d", &days);
+			} else {
+				days = 1; // Will simulate one day only (For lifetime)
+			}
+
+			int day = 1;
+			do {
+				P("============================================\n");
+				if(choice == 1) {
+					P("DAY %d - Victorina\n", day);
+				} else {
+					P("LIFETIME DAILY REMINDER - Victorina\n");
+				}
+				P("============================================\n");
+
+				// Define these medicine as integer to store numbers taken for displaying summary of these medicine taken.
+				int Losartan = 0, Amlodipine = 0, Metformin = 0, Glimepiride = 0,
+				    Atorvastatin = 0, Multivitamins = 0;
+
+				int hour;
+				// for loop to print 24 hours format
+				for(int hour = 0; hour < 24; hour++) {
+					int P_hour = (hour == 0 || hour == 24) ? 12 : hour % 12; // we use ternary operator
+					char time_period[3]; //String for "AM" and "PM"
+					strcpy(time_period, (hour < 12) ? "AM" : "PM");
+					P("%2d:00 %s - ", P_hour, time_period); // Priting the time. (e.g 12:00 PM)
+
+					/*
+					Glimepiride- 6:00 AM
+					Multivitamins- 6:00 AM
+					Metformin- 12:00 PM
+					Losartan- 2:00 PM
+					Amlodipine- 2:00 PM
+					Metformin- 7:00 PM
+					Atorvastatin- 9:00 PM
+					*/
+
+					
+
+					if(hour == 6) {
+						P("It's time to take your Glimepiride & Multivitamins!\n");
+						glimepiride++;
+						multivitamins++;
+					} else if(hour == 12) {
+						P("It's time to take your Metformin!\n");
+						metformin++;
+					} else if(hour == 14) {
+						P("It's time to take your Losartan and Amlodipine!\n");
+						losartan++;
+						amlodipine++;
+					} else if(hour == 19) {
+						P("It's time to take your Metformin Again!\n");
+						metformin++;
+					} else if(hour == 21) {
+						P("It's time to take your Atorvastatin!\n");
+						atorvastatin++;
+					}
+					else {
+						P("No dose scheduled\n");
+					}
+				}
+
+				// summary of medicines taken
+				P("\n-- Summary for Day %d --\n", day);
+				P("Losartan taken: %d time(s)\n", losartan);
+				P("Amlodipine taken: %d time(s)\n", amlodipine);
+				P("Metformin taken: %d time(s)\n", metformin);
+				P("Glimepiride taken: %d time(s)\n", glimepiride);
+				P("Atorvastatin taken: %d time(s)\n", atorvastatin);
+				P("Multivitamins taken: %d time(s)\n", multivitamins);
+
+
+
+				day++;
+			} while (day <= days);
+
+			if(choice == 2) {
+				P("\nThis is a lifetime reminder. Lola Victorina should follow this schedule daily.\n"); //lifetime remider
+			}
+			P("\n");
+			break;
+
+		case 3:
+			P("Exit program");
+			running = 0;
+			break;
+
+		default:
+			P("Invalid input");
+		}
+	}
+	return 0;
 }
