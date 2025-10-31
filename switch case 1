@@ -186,7 +186,7 @@ int main() {
 
     for (int day = 1; day <= num_days; day++) {
         P("\nDay %d:\n", day);
-}
+
         for (int hour = 0; hour < 24; hour++) {
             P("  Hour %d: ", hour);
 
@@ -196,10 +196,12 @@ int main() {
                     P("Take %s ", medicine_name[i]);
                     medicineTaken = 1; 
                 }
+              }
             if (!medicineTaken) 
             {
                 P("No medicine taken\n");
             }
+            P("\n") ;
         }
     }
 
