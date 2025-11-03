@@ -20,28 +20,28 @@ int main() {
 		case 1:
 			char medicine_name[10][50];
 			int interval[10];
+			int time_taken[10];
 			int num_medicines = 0;
 			char more_med;
-			int time_taken;
 			int num_days;
-            
-            P("\n=====================================================\n");
+
+			P("\n=====================================================\n");
 			P("CUSTOM - AUTOMATIC MEDICINE REMINDER SIMULATION");
-            P("\n=====================================================\n");
-            
+			P("\n=====================================================\n");
+
 			// Input medicine names and intervals
 			do {
 				P("\nEnter Medicine name: ");
 				S("%s", medicine_name[num_medicines]);
-                
-                P("Enter the time you took %s (0-23): ", medicine_name[num_medicines]);
-			    S("%d", &time_taken);
-                
+
+				P("Enter the time you took %s (0-23): ", medicine_name[num_medicines]);
+				S("%d", &time_taken[num_medicines]);
+
 				P("Enter the Interval time in hours for the next hours (0-24): ");
 				S("%d", &interval[num_medicines]);
-				
+
 				num_medicines++;
-				
+
 				// Checking the maximum numbers of medicine input
 				if (num_medicines >= 10) {
 					P("You have reached the max number of medicines.\n");
@@ -52,43 +52,41 @@ int main() {
 				S(" %c", &more_med);
 
 			} while (more_med == 'y' || more_med == 'Y');
-            
+
 			//P("\nEnter time you take %s medicine (0-23): ", medicine_name);
 			//S("%d", &time_take);
 
 			P("\nEnter number of days: ");
 			S("%d", &num_days);
 
-            int Day = 1;
-            do {
-			    P("\n======================\n");
+			int Day = 1;
+			do {
+				P("\n======================\n");
 				P("    DAY %d ", Day);
-                P("\n======================\n");
-                
+				P("\n======================\n\n");
+
 				for (int h = 0; h < 24; h++) {
-				    int Hour = (h + time_taken) % 24;
-					P(" %d:00 ~ ", Hour);
+					// int Hour = (h + time_taken) % 24;
+					P(" %d:00 ~ ", h);
 
 					int medicineTaken = 0;
 					for (int i = 0; i < num_medicines; i++) {
-						if ((h % interval[i] == 0)) {
-						    if(!medicineTaken) {
-						        P("take %s ", medicine_name[i]);
-						    }
-							medicineTaken = 1;
+						if (h >= time_taken[i] && ((h - time_taken[i]) % interval[i] == 0)) {
+                            if (!medicineTaken) P("Take ");
+                            P("%s ", medicine_name[i]);
+                            medicineTaken = 1;
 						}
 					}
-					
 					if (!medicineTaken)
 					{
-						P(" No medicine taken");
-						
+						P("No medicine taken");
 					}
-					P("\n");
+					P("\n") ;
 				}
-					Day++;
-            } while (Day <= num_days);
-                break;
+				Day++;
+			} while (Day <= num_days);
+			break;
+			
 
 		case 2:
 			// ==========LOLA VICTORINA'S MAINTENANCE=========
@@ -213,6 +211,7 @@ int main() {
 		default:
 			P("Invalid input");
 		}
+		P("\n");
 	}
 	return 0;
 }
