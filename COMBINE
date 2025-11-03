@@ -18,8 +18,77 @@ int main() {
 
 		switch (Your_choice) {
 		case 1:
-			P("On going");
-			break;
+			char medicine_name[10][50];
+			int interval[10];
+			int num_medicines = 0;
+			char more_med;
+			int time_taken;
+			int num_days;
+            
+            P("\n=====================================================\n");
+			P("CUSTOM - AUTOMATIC MEDICINE REMINDER SIMULATION");
+            P("\n=====================================================\n");
+            
+			// Input medicine names and intervals
+			do {
+				P("\nEnter Medicine name: ");
+				S("%s", medicine_name[num_medicines]);
+                
+                P("Enter the time you took %s (0-23): ", medicine_name[num_medicines]);
+			    S("%d", &time_taken);
+                
+				P("Enter the Interval time in hours for the next hours (0-24): ");
+				S("%d", &interval[num_medicines]);
+				
+				num_medicines++;
+				
+				// Checking the maximum numbers of medicine input
+				if (num_medicines >= 10) {
+					P("You have reached the max number of medicines.\n");
+					break;
+				}
+
+				P("\nNeed to input another medicine? (y/n): ");
+				S(" %c", &more_med);
+
+			} while (more_med == 'y' || more_med == 'Y');
+            
+			//P("\nEnter time you take %s medicine (0-23): ", medicine_name);
+			//S("%d", &time_take);
+
+			P("\nEnter number of days: ");
+			S("%d", &num_days);
+
+            int Day = 1;
+            do {
+			    P("\n======================\n");
+				P("    DAY %d ", Day);
+                P("\n======================\n");
+                
+				for (int h = 0; h < 24; h++) {
+				    int Hour = (h + time_taken) % 24;
+					P(" %d:00 ~ ", Hour);
+
+					int medicineTaken = 0;
+					for (int i = 0; i < num_medicines; i++) {
+						if ((h % interval[i] == 0)) {
+						    if(!medicineTaken) {
+						        P("take %s ", medicine_name[i]);
+						    }
+							medicineTaken = 1;
+						}
+					}
+					
+					if (!medicineTaken)
+					{
+						P(" No medicine taken");
+						
+					}
+					P("\n");
+				}
+					Day++;
+            } while (Day <= num_days);
+                break;
 
 		case 2:
 			// ==========LOLA VICTORINA'S MAINTENANCE=========
@@ -61,17 +130,17 @@ int main() {
 
 			int day = 1;
 			do {
-				P("============================================\n");
+				P("\n============================================\n");
 				if(choice == 1) {
 					P("DAY %d - Victorina\n", day);
 				} else {
 					P("LIFETIME DAILY REMINDER - Victorina\n");
 				}
-				P("============================================\n");
+				P("============================================\n\n");
 
 				// Define these medicine as integer to store numbers taken for displaying summary of these medicine taken.
-				int glimepiride = 0, multivitamins = 0, metformin = 0, 
-					    losartan = 0, amlodipine = 0, atorvastatin = 0;
+				int glimepiride = 0, multivitamins = 0, metformin = 0,
+				    losartan = 0, amlodipine = 0, atorvastatin = 0;
 
 				int hour;
 				// for loop to print 24 hours format
@@ -91,7 +160,7 @@ int main() {
 					Atorvastatin- 9:00 PM
 					*/
 
-					
+
 
 					if(hour == 6) {
 						P("It's time to take your Glimepiride & Multivitamins!\n");
