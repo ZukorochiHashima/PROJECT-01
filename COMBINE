@@ -8,8 +8,11 @@ int main() {
 	int Your_choice;
 
 	while(running == 1) {
+	    P("================================================\n");
+	    P("PILLPAL: AUTOMATIC MEDICINE REMINDER SIMULATION");
+	    P("\n================================================\n\n");
 		P("Choose One\n");
-		P("1. Custom\n");
+		P("1. Create Custom Medicine Schedule\n");
 		P("2. Lola Victorina's Maintenance\n");
 		P("3. Exit\n");
 		P("Enter your choice: ");
@@ -37,7 +40,7 @@ int main() {
 				P("Enter the time you took %s (0-23): ", medicine_name[num_medicines]);
 				S("%d", &time_taken[num_medicines]);
 
-				P("Enter the Interval time in hours for the next hours (0-24): ");
+				P("Enter the Interval time (0-24): ");
 				S("%d", &interval[num_medicines]);
 
 				num_medicines++;
@@ -64,16 +67,20 @@ int main() {
 				P("\n======================\n");
 				P("    DAY %d ", Day);
 				P("\n======================\n\n");
-
+                
+                // Track how many times each medicines was taken that day
+                int s_count[10] = {0};
+                
 				for (int h = 0; h < 24; h++) {
 					// int Hour = (h + time_taken) % 24;
 					P(" %d:00 ~ ", h);
-
+                    
 					int medicineTaken = 0;
 					for (int i = 0; i < num_medicines; i++) {
 						if (h >= time_taken[i] && ((h - time_taken[i]) % interval[i] == 0)) {
                             if (!medicineTaken) P("Take ");
                             P("%s ", medicine_name[i]);
+                            s_count[i]++;
                             medicineTaken = 1;
 						}
 					}
@@ -83,6 +90,15 @@ int main() {
 					}
 					P("\n") ;
 				}
+				
+				
+				// Daily summary
+				P("\n~~~~~~~~~~~ Summary for Day %d ~~~~~~~~~~ \n", Day);
+				for(int i = 0; i < num_medicines; i++) {
+				    P("%s taken: %d time(s): \n", medicine_name[i], s_count[i]);
+				}
+				P("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+				
 				Day++;
 			} while (Day <= num_days);
 			break;
@@ -209,7 +225,7 @@ int main() {
 			break;
 
 		default:
-			P("Invalid input");
+			P("Incorrect input. Please try again");
 		}
 		P("\n");
 	}
