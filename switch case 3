@@ -15,6 +15,9 @@ default: // invalid yung input. Try again
     P("");
 }
 _________
+
+
+switch case 3 {
 #include <stdio.h>
 
 #define p printf
