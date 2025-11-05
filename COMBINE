@@ -1,22 +1,82 @@
 #include <stdio.h>
-#include <string.h>
+#include <string.h> // for string - strcpy
+#include <unistd.h> // for sleep()
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #define P printf
 #define S scanf
+#define t typeText
+#define BOLD    "\033[1m"
+#define RED     "\033[0;31m"
+#define GREEN   "\033[0;32m"
+#define YELLOW  "\033[0;33m"
+#define BLUE    "\033[0;34m"
+#define MAGENTA "\033[0;35m"
+#define CYAN    "\033[0;36m"
+#define PINK    "\033[1;35m"
+#define RESET   "\033[0m"
 
+
+
+// Fast, no-lag screen clear function
+void clearScreen() {
+#ifdef _WIN32
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	DWORD dwMode = 0;
+	GetConsoleMode(hOut, &dwMode);
+	dwMode |= 0x0004; // ENABLE_VIRTUAL_TERMINAL_PROCESSING
+	SetConsoleMode(hOut, dwMode);
+#endif
+	P("\033[2J\033[H"); // ANSI escape code to clear screen instantly
+	fflush(stdout);
+}
+
+
+// Typing animation
+void typeText(const char *text, int delay_ms) {
+	for (int i = 0; text[i] != '\0'; i++) {
+		printf("%c", text[i]);
+		fflush(stdout);
+#ifdef _WIN32
+		Sleep(delay_ms);
+#else
+		usleep(delay_ms * 1000);
+#endif
+	}
+}
+
+// Loading dots animation
+void loadingDots(int count, int delay_ms) {
+	for (int i = 0; i < count; i++) {
+		printf(".");
+		fflush(stdout);
+#ifdef _WIN32
+		Sleep(delay_ms);
+#else
+		usleep(delay_ms * 1000);
+#endif
+	}
+}
+
+// Main program
 int main() {
 	int running = 1; // will put this in while loop so the code will keep on
 	int Your_choice;
 
 	while(running == 1) {
-	    P("================================================\n");
-	    P("PILLPAL: AUTOMATIC MEDICINE REMINDER SIMULATION");
-	    P("\n================================================\n\n");
+		t(CYAN"================================================\n"RESET, 10);
+		t(PINK"  PILLPAL: Smart Medicine Reminder and Guide"RESET, 50);
+		t(CYAN"\n================================================\n\n"RESET, 10);
 		P("Choose One\n");
 		P("1. Create Custom Medicine Schedule\n");
 		P("2. Lola Victorina's Maintenance\n");
 		P("3. Exit\n");
-		P("Enter your choice: ");
+		P(YELLOW"Enter your choice (1-3): "RESET);
 		S("%d", &Your_choice);
+		clearScreen();
 
 
 		switch (Your_choice) {
@@ -28,89 +88,105 @@ int main() {
 			char more_med;
 			int num_days;
 
-			P("\n=====================================================\n");
-			P("CUSTOM - AUTOMATIC MEDICINE REMINDER SIMULATION");
-			P("\n=====================================================\n");
+			t(CYAN"\n=====================================================\n"RESET,10);
+			t(BOLD"                       CUSTOM"RESET, 50);
+			t(CYAN"\n=====================================================\n"RESET, 10);
 
 			// Input medicine names and intervals
 			do {
-				P("\nEnter Medicine name: ");
+				P(YELLOW"\nEnter the Medicine name: "RESET);
 				S("%s", medicine_name[num_medicines]);
 
-				P("Enter the time you took %s (0-23): ", medicine_name[num_medicines]);
-				S("%d", &time_taken[num_medicines]);
+				do {
+					P(YELLOW"Time of intake for %s (0-23): "RESET, medicine_name[num_medicines]);
+					S("%d", &time_taken[num_medicines]);
+					if(time_taken[num_medicines] < 0 || time_taken[num_medicines] > 23) {
+						P(RED"\nInvalid hour! Please enter a time between 0 and 23.\n\n"RESET);
+					}
+				} while(time_taken[num_medicines] < 0 || time_taken[num_medicines] > 23);
 
-				P("Enter the Interval time (0-24): ");
-				S("%d", &interval[num_medicines]);
 
+				do {
+					P(YELLOW"How many hours apart should you take the medicine? (in hours: 1-24): "RESET);
+					S("%d", &interval[num_medicines]);
+					if(interval[num_medicines] < 1 || interval[num_medicines] > 24) {
+						P(RED"\nInvalid hour! Please enter a time between 1 and 24.\n\n"RESET);
+					}
+				} while(interval[num_medicines] < 1 || interval[num_medicines] > 24);
 				num_medicines++;
 
 				// Checking the maximum numbers of medicine input
 				if (num_medicines >= 10) {
-					P("You have reached the max number of medicines.\n");
+					P(RED"You have reached the max number of medicines.\n"RESET);
 					break;
 				}
 
-				P("\nNeed to input another medicine? (y/n): ");
+				P(YELLOW"\nNeed to input another medicine? (y/n): "RESET);
 				S(" %c", &more_med);
 
 			} while (more_med == 'y' || more_med == 'Y');
 
-			//P("\nEnter time you take %s medicine (0-23): ", medicine_name);
-			//S("%d", &time_take);
-
-			P("\nEnter number of days: ");
+			P(YELLOW"\nEnter number of days: "RESET);
 			S("%d", &num_days);
+			clearScreen();
 
 			int Day = 1;
 			do {
-				P("\n======================\n");
-				P("    DAY %d ", Day);
-				P("\n======================\n\n");
-                
-                // Track how many times each medicines was taken that day
-                int s_count[10] = {0};
-                
+				P(CYAN"\n======================\n"RESET);
+				P("      DAY %d ", Day);
+				P(CYAN"\n======================\n\n"RESET);
+
+				// Track how many times each medicines was taken that day
+				int s_count[10] = {0};
+
 				for (int h = 0; h < 24; h++) {
 					// int Hour = (h + time_taken) % 24;
 					P(" %d:00 ~ ", h);
-                    
+
 					int medicineTaken = 0;
+					int firstMed = 1; // for "&" formatting
 					for (int i = 0; i < num_medicines; i++) {
 						if (h >= time_taken[i] && ((h - time_taken[i]) % interval[i] == 0)) {
-                            if (!medicineTaken) P("Take ");
-                            P("%s ", medicine_name[i]);
-                            s_count[i]++;
-                            medicineTaken = 1;
+							if (!medicineTaken) {
+								P(RED "Take " RESET);
+								medicineTaken = 1;
+							}
+
+							if (!firstMed) P(" & ");
+							P(BLUE"%s"RESET, medicine_name[i]);
+
+							s_count[i]++;
+							firstMed = 0;
+
 						}
 					}
-					if (!medicineTaken)
-					{
+
+					if (!medicineTaken) {
 						P("No medicine taken");
 					}
 					P("\n") ;
 				}
-				
-				
+
+
 				// Daily summary
-				P("\n~~~~~~~~~~~ Summary for Day %d ~~~~~~~~~~ \n", Day);
+				P(GREEN"\n~~~~~~~~~~~ Summary for Day %d ~~~~~~~~~~ \n"RESET, Day);
 				for(int i = 0; i < num_medicines; i++) {
-				    P("%s taken: %d time(s): \n", medicine_name[i], s_count[i]);
+					P("%s taken: %d time(s): \n", medicine_name[i], s_count[i]);
 				}
-				P("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-				
+				P(GREEN"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"RESET);
+
 				Day++;
 			} while (Day <= num_days);
 			break;
-			
+
 
 		case 2:
 			// ==========LOLA VICTORINA'S MAINTENANCE=========
-			P("\n--- PATIENT INFORMATION ---\n");
-			P("Name: Victorina\n");
-			P("Age: 78 yrs old\n");
-			P("Sex: Female\n");
-			P("------------------------------\n");
+			P(CYAN"\n--- PATIENT INFORMATION ---\n"RESET);
+			t("Name: Victorina\n", 50);
+			t("Age: 78 yrs old\n", 50);
+			t("Sex: Female\n", 50);
+			P(CYAN"------------------------------\n"RESET);
 			P("Diagnoses and Prescriptions:\n");
 			P("1. Hypertension:\n");
 			P("   - Losartan (50 mg) -> 2:00 PM\n");
@@ -122,7 +198,7 @@ int main() {
 			P("   - Atorvastatin (20 mg) -> 9:00 PM\n");
 			P("4. Multivitamins:\n");
 			P("   - Multivitamins -> 6:00 AM\n");
-			P("------------------------------\n");
+			P(CYAN"------------------------------\n"RESET);
 
 			// MODE
 			int choice;
@@ -131,26 +207,28 @@ int main() {
 			P("2. Lifetime\n");
 
 			// Userinput
-			P("Enter your choice: ");
+			P(YELLOW"Enter your choice: "RESET);
 			S("%d", &choice);
+
 
 			int days;
 			if(choice == 1) {
-				P("Enter number of days: ");
+				P(YELLOW"Enter number of days: "RESET);
 				S("%d", &days);
 			} else {
 				days = 1; // Will simulate one day only (For lifetime)
 			}
 
+
 			int day = 1;
 			do {
-				P("\n============================================\n");
+				P(CYAN"\n============================================\n"RESET);
 				if(choice == 1) {
-					P("DAY %d - Victorina\n", day);
+					P("           DAY %d - Victorina\n", day);
 				} else {
-					P("LIFETIME DAILY REMINDER - Victorina\n");
+					P("   LIFETIME DAILY REMINDER - Victorina\n");
 				}
-				P("============================================\n\n");
+				P(CYAN"============================================\n\n"RESET);
 
 				// Define these medicine as integer to store numbers taken for displaying summary of these medicine taken.
 				int glimepiride = 0, multivitamins = 0, metformin = 0,
@@ -177,21 +255,21 @@ int main() {
 
 
 					if(hour == 6) {
-						P("It's time to take your Glimepiride & Multivitamins!\n");
+						P(RED"It's time to take your Glimepiride & Multivitamins!\n"RESET);
 						glimepiride++;
 						multivitamins++;
 					} else if(hour == 12) {
-						P("It's time to take your Metformin!\n");
+						P(RED"It's time to take your Metformin!\n"RESET);
 						metformin++;
 					} else if(hour == 14) {
-						P("It's time to take your Losartan and Amlodipine!\n");
+						P(RED"It's time to take your Losartan and Amlodipine!\n"RESET);
 						losartan++;
 						amlodipine++;
 					} else if(hour == 19) {
-						P("It's time to take your Metformin Again!\n");
+						P(RED"It's time to take your Metformin Again!\n"RESET);
 						metformin++;
 					} else if(hour == 21) {
-						P("It's time to take your Atorvastatin!\n");
+						P(RED"It's time to take your Atorvastatin!\n"RESET);
 						atorvastatin++;
 					}
 					else {
@@ -200,7 +278,7 @@ int main() {
 				}
 
 				// summary of medicines taken
-				P("\n-- Summary for Day %d --\n", day);
+				P(GREEN"\n-- Summary for Day %d --\n"RESET, day);
 				P("Losartan taken: %d time(s)\n", losartan);
 				P("Amlodipine taken: %d time(s)\n", amlodipine);
 				P("Metformin taken: %d time(s)\n", metformin);
@@ -208,24 +286,43 @@ int main() {
 				P("Atorvastatin taken: %d time(s)\n", atorvastatin);
 				P("Multivitamins taken: %d time(s)\n", multivitamins);
 
-
-
 				day++;
 			} while (day <= days);
 
 			if(choice == 2) {
-				P("\nThis is a lifetime reminder. Lola Victorina should follow this schedule daily.\n"); //lifetime remider
+				P(RED"\nThis is a lifetime reminder. Lola Victorina should follow this schedule daily.\n"RESET); //lifetime remider
 			}
 			P("\n");
 			break;
 
 		case 3:
-			P("Exit program");
+			P(GREEN "\nThank you for using PILLPAL! Stay healthy \n" RESET);
+			P(PINK"\nMEMBERS:\n"RESET);
+			char members[5][50] = {
+				"Baniega, Lance Runel D.",
+				"Padilla, John Rolly Q.",
+				"Pineda, Allen Regz A.",
+				"Ricalde, Vin Archie A.",
+				"Rondina, Leona Gabrielle M."
+			};
+
+			for(int n = 0; n < 5; n++) {
+				P("%s\n", members[n]);
+			};
+
+
+			t(CYAN "\nClosing in 3..." RESET, 50);
+			sleep(1);
+			t(" 2...", 10);
+			sleep(1);
+			t(" 1...\n", 10);
+			sleep(1);
+			clearScreen();
 			running = 0;
 			break;
 
 		default:
-			P("Incorrect input. Please try again");
+			P(RED"\nIncorrect input. Please try again\n"RESET);
 		}
 		P("\n");
 	}
