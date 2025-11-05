@@ -2,6 +2,8 @@
 #include <string.h> // for string - strcpy
 #include <unistd.h> // for sleep()
 
+// conditional compilation block — it’s used to include specific code only when your program is compiled on Windows.
+// Since we include void clearScreen and we are using windows
 #ifdef _WIN32
 #include <windows.h>
 #endif
@@ -81,9 +83,9 @@ int main() {
 
 		switch (Your_choice) {
 		case 1:
-			char medicine_name[10][50];
-			int interval[10];
-			int time_taken[10];
+			char medicine_name[10][50]; // array for medicine name
+			int interval[10]; // to store up to 10 interval time since in medicine name is also 10
+			int time_taken[10]; // same with interval
 			int num_medicines = 0;
 			char more_med;
 			int num_days;
@@ -97,6 +99,8 @@ int main() {
 				P(YELLOW"\nEnter the Medicine name: "RESET);
 				S("%s", medicine_name[num_medicines]);
 
+
+                // Prompt the user for the medicine intake hour and repeat until a valid value (0–23) is entered
 				do {
 					P(YELLOW"Time of intake for %s (0-23): "RESET, medicine_name[num_medicines]);
 					S("%d", &time_taken[num_medicines]);
@@ -105,7 +109,7 @@ int main() {
 					}
 				} while(time_taken[num_medicines] < 0 || time_taken[num_medicines] > 23);
 
-
+                // Prompt the user for the medicine interval hour and repeat until a valid value (1–24) is entered
 				do {
 					P(YELLOW"How many hours apart should you take the medicine? (in hours: 1-24): "RESET);
 					S("%d", &interval[num_medicines]);
@@ -151,7 +155,8 @@ int main() {
 								P(RED "Take " RESET);
 								medicineTaken = 1;
 							}
-
+                            
+                            // Print "&" between medicine names, but only after the first one in the same hour
 							if (!firstMed) P(" & ");
 							P(BLUE"%s"RESET, medicine_name[i]);
 
