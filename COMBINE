@@ -312,7 +312,7 @@ int main() {
 				"Santos, Mitziko R."
 			};
 
-			for(int n = 0; n < 5; n++) {
+			for(int n = 0; n < 6; n++) {
 				P("%s\n", members[n]);
 			};
 
