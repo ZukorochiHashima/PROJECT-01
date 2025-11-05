@@ -303,12 +303,13 @@ int main() {
 		case 3:
 			P(GREEN "\nThank you for using PILLPAL! Stay healthy \n" RESET);
 			P(PINK"\nMEMBERS:\n"RESET);
-			char members[5][50] = {
+			char members[6][50] = {
 				"Baniega, Lance Runel D.",
 				"Padilla, John Rolly Q.",
 				"Pineda, Allen Regz A.",
 				"Ricalde, Vin Archie A.",
-				"Rondina, Leona Gabrielle M."
+				"Rondina, Leona Gabrielle M.",
+				"Santos, Mitziko R."
 			};
 
 			for(int n = 0; n < 5; n++) {
