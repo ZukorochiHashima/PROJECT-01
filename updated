@@ -7,6 +7,7 @@
 #include <windows.h>
 #endif
 
+/* ================== MACROS & COLORS ================== */
 #define P printf
 #define S scanf
 
@@ -16,6 +17,7 @@
 #define CYAN    "\033[0;36m"
 #define BLUE    "\033[0;34m"
 #define MAGENTA "\033[0;35m"
+#define PINK    "\033[1;35m"
 #define RESET   "\033[0m"
 #define BOLD    "\033[1m"
 
@@ -24,15 +26,17 @@
 /* ================== UTILITY FUNCTIONS ================== */
 
 void clearScreen() {
+    // ANSI escape code to clear screen and home cursor
     P("\033[2J\033[H");
     fflush(stdout);
 }
 
+// Typing effect function (Replaces the old 't' macro)
 void typeEffect(const char *text) {
     for (int i = 0; text[i] != '\0'; i++) {
         P("%c", text[i]);
         fflush(stdout);
-        usleep(15000); 
+        usleep(15000); // 15ms delay for smooth typing
     }
 }
 
@@ -47,6 +51,7 @@ void simulateSchedule(char med[][50], int time[], int interval[], int count, int
         int dailyTakenCount[MAX_MED] = {0};
 
         for (int h = 0; h < 24; h++) {
+            // Convert to 12-hour format for display
             int displayHour = (h == 0 || h == 12) ? 12 : h % 12;
             char *period = (h < 12) ? "AM" : "PM";
 
@@ -55,6 +60,7 @@ void simulateSchedule(char med[][50], int time[], int interval[], int count, int
             int firstInHour = 1;
 
             for (int i = 0; i < count; i++) {
+                // If current hour is intake time OR hits the repeat interval
                 if (h >= time[i] && (h - time[i]) % interval[i] == 0) {
                     if (firstInHour) {
                         P(RED "Take " RESET);
@@ -103,11 +109,13 @@ void addMedicine(char med[][50], int time[], int interval[], int *count) {
     do {
         P("Time of first intake (0-23): ");
         S("%d", &time[*count]);
+        if(time[*count] < 0 || time[*count] > 23) P(RED "Invalid hour!\n" RESET);
     } while (time[*count] < 0 || time[*count] > 23);
 
     do {
         P("Interval between doses (1-24 hrs): ");
         S("%d", &interval[*count]);
+        if(interval[*count] < 1 || interval[*count] > 24) P(RED "Invalid interval!\n" RESET);
     } while (interval[*count] < 1 || interval[*count] > 24);
 
     (*count)++;
@@ -128,7 +136,7 @@ void editMedicine(char med[][50], int time[], int interval[], int count) {
         S("%d", &time[choice]);
         P("New interval (1-24): ");
         S("%d", &interval[choice]);
-        P(GREEN "Updated!\n" RESET);
+        P(GREEN "Updated successfully!\n" RESET);
     } else {
         P(RED "Invalid selection.\n" RESET);
     }
@@ -150,7 +158,7 @@ void deleteMedicine(char med[][50], int time[], int interval[], int *count) {
             interval[i] = interval[i+1];
         }
         (*count)--;
-        P(GREEN "Deleted.\n" RESET);
+        P(GREEN "Deleted successfully.\n" RESET);
     }
 }
 
@@ -240,29 +248,58 @@ int main() {
     int choice;
     int running = 1;
 
+    char members[6][50] = {
+        "Baniega, Lance Runel D.",
+        "Padilla, John Rolly Q.",
+        "Pineda, Allen Regz A.",
+        "Ricalde, Vin Archie A.",
+        "Rondina, Leona Gabrielle M.",
+        "Santos, Mitziko R."
+    };
+
     while (running) {
         P(CYAN "\n============================================\n" RESET);
         typeEffect(BOLD "  PILLPAL: Smart Medicine Reminder System\n" RESET);
         P(CYAN "============================================\n" RESET);
-        P("1. Custom Medicine Schedule\n");
+        P("1. Create Custom Medicine Schedule\n");
         P("2. Lola Victorina's Maintenance\n");
         P("3. Exit\n");
-        P(YELLOW "Enter choice: " RESET);
+        P(YELLOW "Enter choice (1-3): " RESET);
         
         if (S("%d", &choice) != 1) {
-            while(getchar() != '\n'); 
+            while(getchar() != '\n'); // Prevent infinite loop on character input
+            P(RED "Numbers only, please.\n" RESET);
             continue;
         }
         clearScreen();
 
         switch (choice) {
-            case 1: customScheduleMode(); break;
-            case 2: lolaVictorinaMode(); break;
+            case 1: 
+                customScheduleMode(); 
+                break;
+            case 2: 
+                lolaVictorinaMode(); 
+                break;
             case 3:
-                P(GREEN "\nThank you for using PILLPAL! Stay healthy.\n" RESET);
+                P(GREEN "\nThank you for using PILLPAL! Stay healthy\n" RESET);
+                P(PINK "\nMEMBERS:\n" RESET);
+                for(int n = 0; n < 6; n++) {
+                    P("%s\n", members[n]);
+                }
+
+                P("\n");
+                typeEffect(CYAN "Closing in 3..." RESET);
+                sleep(1);
+                typeEffect(" 2...");
+                sleep(1);
+                typeEffect(" 1...\n");
+                sleep(1);
+                
+                clearScreen();
                 running = 0;
                 break;
-            default: P(RED "Invalid input.\n" RESET);
+            default: 
+                P(RED "Invalid input. Please choose 1, 2, or 3.\n" RESET);
         }
     }
     return 0;
