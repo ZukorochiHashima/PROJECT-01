@@ -1,0 +1,257 @@
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+#define P printf
+#define S scanf
+
+#define RED     "\033[0;31m"
+#define GREEN   "\033[0;32m"
+#define YELLOW  "\033[0;33m"
+#define CYAN    "\033[0;36m"
+#define BLUE    "\033[0;34m"
+#define MAGENTA "\033[0;35m"
+#define RESET   "\033[0m"
+#define BOLD    "\033[1m"
+
+#define MAX_MED 10
+
+/* ================== UTILITY FUNCTIONS ================== */
+
+void clearScreen() {
+    // Standard ANSI escape code to clear screen and home cursor
+    P("\033[2J\033[H");
+    fflush(stdout);
+}
+
+// Helper to add a typing effect for headers
+void typeEffect(const char *text) {
+    for (int i = 0; text[i] != '\0'; i++) {
+        P("%c", text[i]);
+        fflush(stdout);
+        usleep(15000); // 15ms delay
+    }
+}
+
+/* ================== SIMULATION ENGINE ================== */
+
+// This is the core logic that both Custom and Lola modes now share
+void simulateSchedule(char med[][50], int time[], int interval[], int count, int days) {
+    for (int day = 1; day <= days; day++) {
+        P(CYAN "\n============================================\n" RESET);
+        P(BOLD "               DAY %d SCHEDULE\n" RESET, day);
+        P(CYAN "============================================\n" RESET);
+
+        int dailyTakenCount[MAX_MED] = {0};
+
+        for (int h = 0; h < 24; h++) {
+            // Format time for 12-hour display logic
+            int displayHour = (h == 0 || h == 12) ? 12 : h % 12;
+            char *period = (h < 12) ? "AM" : "PM";
+
+            P(" %02d:00 %s - ", displayHour, period);
+            int taken = 0;
+            int firstInHour = 1;
+
+            for (int i = 0; i < count; i++) {
+                // Logic: If current hour is past start time AND hits the interval
+                if (h >= time[i] && (h - time[i]) % interval[i] == 0) {
+                    if (firstInHour) {
+                        P(RED "Take " RESET);
+                        firstInHour = 0;
+                    } else {
+                        P(" & ");
+                    }
+                    P(BLUE "%s" RESET, med[i]);
+                    dailyTakenCount[i]++;
+                    taken = 1;
+                }
+            }
+
+            if (!taken) P(RESET "No medicine" RESET);
+            P("\n");
+        }
+
+        P(GREEN "\n--- Daily Intake Summary (Day %d) ---\n" RESET, day);
+        for (int i = 0; i < count; i++) {
+            P(" - %-15s: %d dose(s)\n", med[i], dailyTakenCount[i]);
+        }
+    }
+}
+
+/* ================== MEDICINE MANAGEMENT ================== */
+
+void showMedicineList(char med[][50], int time[], int interval[], int count) {
+    if (count == 0) {
+        P(RED "\nNo medicines added yet.\n" RESET);
+        return;
+    }
+    P(GREEN "\n--- Current Medicine List ---\n" RESET);
+    for (int i = 0; i < count; i++) {
+        P("%d. [%s] Starts at %02d:00, every %d hour(s)\n", i + 1, med[i], time[i], interval[i]);
+    }
+}
+
+void addMedicine(char med[][50], int time[], int interval[], int *count) {
+    if (*count >= MAX_MED) {
+        P(RED "\nMaximum medicine limit reached.\n" RESET);
+        return;
+    }
+    P(YELLOW "\nEnter medicine name: " RESET);
+    S("%s", med[*count]);
+
+    do {
+        P("Time of first intake (0-23): ");
+        S("%d", &time[*count]);
+    } while (time[*count] < 0 || time[*count] > 23);
+
+    do {
+        P("Interval between doses (1-24 hrs): ");
+        S("%d", &interval[*count]);
+    } while (interval[*count] < 1 || interval[*count] > 24);
+
+    (*count)++;
+    P(GREEN "Medicine added successfully!\n" RESET);
+}
+
+void editMedicine(char med[][50], int time[], int interval[], int count) {
+    int choice;
+    showMedicineList(med, time, interval, count);
+    if (count == 0) return;
+
+    P(YELLOW "\nSelect number to edit: " RESET);
+    S("%d", &choice);
+    choice--;
+
+    if (choice >= 0 && choice < count) {
+        P("New time (0-23): ");
+        S("%d", &time[choice]);
+        P("New interval (1-24): ");
+        S("%d", &interval[choice]);
+        P(GREEN "Updated!\n" RESET);
+    } else {
+        P(RED "Invalid selection.\n" RESET);
+    }
+}
+
+void deleteMedicine(char med[][50], int time[], int interval[], int *count) {
+    int choice;
+    showMedicineList(med, time, interval, *count);
+    if (*count == 0) return;
+
+    P(YELLOW "\nSelect number to delete: " RESET);
+    S("%d", &choice);
+    choice--;
+
+    if (choice >= 0 && choice < *count) {
+        for (int i = choice; i < *count - 1; i++) {
+            strcpy(med[i], med[i+1]);
+            time[i] = time[i+1];
+            interval[i] = interval[i+1];
+        }
+        (*count)--;
+        P(GREEN "Deleted.\n" RESET);
+    }
+}
+
+/* ================== MODES ================== */
+
+void customScheduleMode() {
+    char medicine[MAX_MED][50];
+    int time_taken[MAX_MED];
+    int interval[MAX_MED];
+    int medCount = 0;
+    int choice, days;
+
+    do {
+        P(CYAN "\n--- Custom Medicine Menu ---\n" RESET);
+        P("1. Add Medicine\n2. View List\n3. Edit Medicine\n4. Delete Medicine\n5. Start Simulation\n6. Back\n");
+        P(YELLOW "Choice: " RESET);
+        S("%d", &choice);
+
+        switch (choice) {
+            case 1: addMedicine(medicine, time_taken, interval, &medCount); break;
+            case 2: showMedicineList(medicine, time_taken, interval, medCount); break;
+            case 3: editMedicine(medicine, time_taken, interval, medCount); break;
+            case 4: deleteMedicine(medicine, time_taken, interval, &medCount); break;
+            case 5:
+                if (medCount == 0) P(RED "Add medicines first!\n" RESET);
+                else {
+                    P("Enter simulation days: ");
+                    S("%d", &days);
+                    simulateSchedule(medicine, time_taken, interval, medCount, days);
+                }
+                break;
+        }
+    } while (choice != 6);
+}
+
+void lolaVictorinaMode() {
+    // Pre-defined data for Lola Victorina
+    char lolaMed[6][50] = {"Glimepiride", "Multivitamins", "Metformin", "Losartan", "Amlodipine", "Atorvastatin"};
+    int lolaTime[6] = {6, 6, 12, 14, 14, 21};
+    int lolaInterval[6] = {24, 24, 7, 24, 24, 24}; // Metformin 12pm & 7pm (approx 7hr gap)
+    int count = 6;
+    int choice, days;
+
+    P(CYAN "\n--- LOLA VICTORINA'S MAINTENANCE ---\n" RESET);
+    P("1. Specific number of days\n");
+    P("2. Lifetime (Shows 1-day cycle)\n");
+    P(YELLOW "Enter your choice: " RESET);
+    S("%d", &choice);
+
+    if (choice == 1) {
+        P(YELLOW "Enter number of days: " RESET);
+        S("%d", &days);
+    } else if (choice == 2) {
+        days = 1;
+    } else {
+        P(RED "Invalid choice.\n" RESET);
+        return;
+    }
+
+    simulateSchedule(lolaMed, lolaTime, lolaInterval, count, days);
+
+    if (choice == 2) {
+        P(MAGENTA "\n*** Note: This schedule repeats daily for life. ***\n" RESET);
+    }
+}
+
+/* ================== MAIN ================== */
+
+int main() {
+    int choice;
+    int running = 1;
+
+    while (running) {
+        P(CYAN "\n============================================\n" RESET);
+        typeEffect(BOLD "  PILLPAL: Smart Medicine Reminder System\n" RESET);
+        P(CYAN "============================================\n" RESET);
+        P("1. Custom Medicine Schedule\n");
+        P("2. Lola Victorina's Maintenance\n");
+        P("3. Exit\n");
+        P(YELLOW "Enter choice: " RESET);
+        
+        if (S("%d", &choice) != 1) {
+            while(getchar() != '\n'); // Clear buffer if user types a letter
+            continue;
+        }
+        clearScreen();
+
+        switch (choice) {
+            case 1: customScheduleMode(); break;
+            case 2: lolaVictorinaMode(); break;
+            case 3:
+                P(GREEN "\nThank you for using PILLPAL! Stay healthy.\n" RESET);
+                running = 0;
+                break;
+            default: P(RED "Invalid input.\n" RESET);
+        }
+    }
+    return 0;
+}
