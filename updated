@@ -24,33 +24,29 @@
 /* ================== UTILITY FUNCTIONS ================== */
 
 void clearScreen() {
-    // Standard ANSI escape code to clear screen and home cursor
     P("\033[2J\033[H");
     fflush(stdout);
 }
 
-// Helper to add a typing effect for headers
 void typeEffect(const char *text) {
     for (int i = 0; text[i] != '\0'; i++) {
         P("%c", text[i]);
         fflush(stdout);
-        usleep(15000); // 15ms delay
+        usleep(15000); 
     }
 }
 
 /* ================== SIMULATION ENGINE ================== */
 
-// This is the core logic that both Custom and Lola modes now share
 void simulateSchedule(char med[][50], int time[], int interval[], int count, int days) {
     for (int day = 1; day <= days; day++) {
         P(CYAN "\n============================================\n" RESET);
-        P(BOLD "               DAY %d SCHEDULE\n" RESET, day);
+        P(BOLD "                DAY %d SCHEDULE\n" RESET, day);
         P(CYAN "============================================\n" RESET);
 
         int dailyTakenCount[MAX_MED] = {0};
 
         for (int h = 0; h < 24; h++) {
-            // Format time for 12-hour display logic
             int displayHour = (h == 0 || h == 12) ? 12 : h % 12;
             char *period = (h < 12) ? "AM" : "PM";
 
@@ -59,7 +55,6 @@ void simulateSchedule(char med[][50], int time[], int interval[], int count, int
             int firstInHour = 1;
 
             for (int i = 0; i < count; i++) {
-                // Logic: If current hour is past start time AND hits the interval
                 if (h >= time[i] && (h - time[i]) % interval[i] == 0) {
                     if (firstInHour) {
                         P(RED "Take " RESET);
@@ -192,14 +187,31 @@ void customScheduleMode() {
 }
 
 void lolaVictorinaMode() {
-    // Pre-defined data for Lola Victorina
+    P(CYAN "\n--- PATIENT INFORMATION ---\n" RESET);
+    typeEffect("Name: Victorina\n");
+    typeEffect("Age: 78 yrs old\n");
+    typeEffect("Sex: Female\n");
+    P(CYAN "------------------------------\n" RESET);
+    P(BOLD "Diagnoses and Prescriptions:\n" RESET);
+    P("1. Hypertension:\n");
+    P("   - Losartan (50 mg) -> 2:00 PM\n");
+    P("   - Amlodipine (5 mg) -> 2:00 PM\n");
+    P("2. Type 2 Diabetes Mellitus:\n");
+    P("   - Metformin (500 mg) -> 12:00 PM / 7:00 PM\n");
+    P("   - Glimepiride (2 mg) -> 6:00 AM\n");
+    P("3. Hyperlipidemia:\n");
+    P("   - Atorvastatin (20 mg) -> 9:00 PM\n");
+    P("4. Multivitamins:\n");
+    P("   - Multivitamins -> 6:00 AM\n");
+    P(CYAN "------------------------------\n" RESET);
+
     char lolaMed[6][50] = {"Glimepiride", "Multivitamins", "Metformin", "Losartan", "Amlodipine", "Atorvastatin"};
     int lolaTime[6] = {6, 6, 12, 14, 14, 21};
-    int lolaInterval[6] = {24, 24, 7, 24, 24, 24}; // Metformin 12pm & 7pm (approx 7hr gap)
+    int lolaInterval[6] = {24, 24, 7, 24, 24, 24}; 
     int count = 6;
     int choice, days;
 
-    P(CYAN "\n--- LOLA VICTORINA'S MAINTENANCE ---\n" RESET);
+    P(CYAN "\n--- REMINDER SETTINGS ---\n" RESET);
     P("1. Specific number of days\n");
     P("2. Lifetime (Shows 1-day cycle)\n");
     P(YELLOW "Enter your choice: " RESET);
@@ -238,7 +250,7 @@ int main() {
         P(YELLOW "Enter choice: " RESET);
         
         if (S("%d", &choice) != 1) {
-            while(getchar() != '\n'); // Clear buffer if user types a letter
+            while(getchar() != '\n'); 
             continue;
         }
         clearScreen();
